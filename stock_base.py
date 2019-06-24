@@ -100,7 +100,9 @@ def clac(dis,startdate,enddate,Accuracy):
 #那么按照一定距离去执行，最终的成功失败分布是什么样？
 #如果每个点位都执行这个策略，最终所有点位的成功失败是什么样？
 #要区分是否只有隔天才可以交易
+######
 
+#Accuracy 最小价格出现在小数点后几位
 
 	result_=[]
 	res=[]
@@ -117,15 +119,21 @@ def clac(dis,startdate,enddate,Accuracy):
 		#print data_dict[key]
 		#取最高和最低之间的每个价格建仓
 		open_=[]
+		###每一天可能产生的开单价格
 		
 		open_.append(data_dict[key]['low'].values[0])
 
-		while data_dict[key]['high'].values[0]-Accuracy>=open_[len(open_)-1]:
-			open_.append(open_[len(open_)-1]+Accuracy)
-		print key ,open_
-	# for date in date_list:
+		for x in xrange(1,int(round(((data_dict[key]['high'].values[0]-data_dict[key]['low'].values[0])*pow(10,Accuracy)),0))+1):
+			
+			open_.append(round(data_dict[key]['low'].values[0]+x*float(1)/pow(10,Accuracy),Accuracy))#python 2坑，float（1 ）/100才会有小数
 
-	# 		print data.loc[date].tolist()
+	
+
+		#open此时存储在每天可以买入的所有价格
+		#接下来从下一天开始，当天买的每个价格在第二天以后轮训，直接完毕关仓库
+		#用第二天是因为当天不知道价格先后顺序，假设当天都不交易
+
+		
 
 
 	# res.append(int(float(data_[line][4])))  #这个line的最低价
@@ -165,7 +173,7 @@ def test():
 if __name__ == '__main__':
 	# for n in xrange(1,20):
 	#test()
-	clac(3,'2019-06-01','2019-06-17',0.02)
+	clac(10,'2019-06-24','2019-06-24',3)
 	#print t
 	# 选择产品单说
 	# 进场时机单说
